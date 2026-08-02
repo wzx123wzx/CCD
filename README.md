@@ -35,10 +35,8 @@ Download the pretrained weights from [Google Drive](https://drive.google.com/dri
 ```
 dataset/Doc3d/
 ├── img/          # warped document images  (sub-folders 1-21)
-├── target_img/   # flat GT images
 ├── grid2D/       # 2D control-point meshes (.mat)
 ├── grid3D/       # 3D control-point meshes (.mat)
-├── grid_bm/      # normalised backward mappings (.npy)
 └── recon/        # checkerboard reconstruction images
 ```
 
@@ -47,20 +45,19 @@ dataset/Doc3d/
 ```
 dataset/UVDoc/
 ├── img/               # warped images (.png)
-├── target_img/        # flat GT images
 ├── grid2d/            # 2D meshes (.mat)
 ├── grid3d/            # 3D meshes (.mat)
-├── grid_bm/           # backward mappings (.npy)
 ├── seg/               # foreground masks (.mat)
 ├── metadata_sample/   # per-sample JSON metadata
+└── benchmark/         # UVDoc benchmark split
+    └── img/           # 50 benchmark images
 ```
 
 ### DocUNet Benchmark
 
 ```
 dataset/DocUNet/
-├── crop/     # distorted input images (512×512)
-├── crop512/  # distorted input images (512×512, alternative format)
+├── crop/     # distorted input images
 └── scan/     # flat GT scans
 ```
 

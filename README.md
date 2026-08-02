@@ -53,8 +53,6 @@ dataset/UVDoc/
 ├── grid_bm/           # backward mappings (.npy)
 ├── seg/               # foreground masks (.mat)
 ├── metadata_sample/   # per-sample JSON metadata
-└── benchmark/         # UVDoc benchmark split
-    └── img/           # 50 benchmark images
 ```
 
 ### DocUNet Benchmark

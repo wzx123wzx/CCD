@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Cascaded Coordinate Diffusion: Extending the Generative Paradigm for Document Dewarping
 
 Document image geometric correction via a cascade diffusion-based geometric transformation field predictor.
@@ -170,3 +171,6 @@ We sincerely thank the following projects, since our code is largely based on or
 [UVDoc](https://github.com/tanguymagne/UVDoc),
 [DewarpNet](https://github.com/cvlab-stonybrook/DewarpNet), and
 [DocScanner](https://github.com/fh2019ustc/DocScanner).
+=======
+# DocDiffuser
+>>>>>>> ea0aabbcb70c3ef8d3442e9d3793e12c382b3ce1

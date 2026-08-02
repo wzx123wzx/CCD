@@ -6,17 +6,17 @@ class train:
     device = torch.device("cuda:0")
     dataset_name = 'mix'
     if dataset_name == 'mix':
-        train_doc3d_dataset_path = '/root/autodl-tmp/dataset/Doc3d'
-        train_uvdoc_dataset_path = '/root/autodl-tmp/dataset/UVDoc'
+        train_doc3d_dataset_path = '/root/dataset/Doc3d'
+        train_uvdoc_dataset_path = '/root/dataset/UVDoc'
         bg_aug_doc3d_dataset = True
         uvdoc_grid3d_normalization = (0.11433014, -0.12551452, 0.12401487, -0.12401487, 0.1952378, -0.1952378)
         doc3d_grid3d_normalization = (1.2539363, -1.2442188, 1.2396319, -1.2289206, 0.6436657, -0.67492497)
     elif dataset_name == 'uvdoc':
-        train_uvdoc_dataset_path = '/root/autodl-tmp/dataset/UVDoc'
+        train_uvdoc_dataset_path = '/root/dataset/UVDoc'
         uvdoc_grid3d_normalization = (0.11433014, -0.12551452, 0.12401487, -0.12401487, 0.1952378, -0.1952378)
     elif dataset_name == 'doc3d_grid':
         bg_aug_doc3d_dataset = True
-        train_doc3d_dataset_path = '/root/autodl-tmp/wzx/dataset/Doc3d'
+        train_doc3d_dataset_path = '/root/dataset/Doc3d'
         doc3d_grid3d_normalization = (1.2539363, -1.2442188, 1.2396319, -1.2289206, 0.6436657, -0.67492497)
 
     train_mode = 'Cascade'
@@ -50,11 +50,11 @@ class eval:
     device = torch.device("cuda:0")
     dataset_name = "docunet"
     if dataset_name == 'docunet':
-        eval_dataset_path = 'E:/Dataset/DocUNet/crop'
+        eval_dataset_path = '/root/dataset/DocUNet/crop'
     elif dataset_name == 'uvdoc':
-        eval_dataset_path = '/root/autodl-tmp/dataset/UVDoc/benchmark/img'
+        eval_dataset_path = '/root/dataset/UVDoc/benchmark/img'
     elif dataset_name == 'dir300':
-        eval_dataset_path = '/root/autodl-tmp/dataset/DIR300/dist'
+        eval_dataset_path = '/root/dataset/DIR300/dist'
     experiment_name = "test"
     save_tps_control_points = False  # Export first-stage TPS control points for interactive visualization.
 

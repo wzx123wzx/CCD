@@ -6,7 +6,7 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 
-from train_settings.ccd.evaluation import run_sample_lr_dewarping
+from train_settings.ccd.evaluation import run_sample_lr_dewarping, save_tps_control_points
 from train_settings.ccd.improved_diffusion import logger
 from train_settings.ccd.improved_diffusion.script_util import create_model_and_diffusion
 from train_settings.ccd.improved_diffusion.gaussian_diffusion import grid2flow
@@ -138,6 +138,13 @@ def infer(image_path, output_path, settings):
 
     pred_flow, _ = grid2flow(sample_list[-1], [H_ori, W_ori], norm_target=norm_target_mesh[-1])
 
+    control_points_path = None
+    if settings.eval.save_tps_control_points:
+        control_points_path = f"{os.path.splitext(output_path)[0]}_control_points.json"
+        save_tps_control_points(
+            sample_list[0], norm_target_mesh[0], [H_ori, W_ori], control_points_path
+        )
+
     img_ori_t = torch.from_numpy(img_ori).float().permute(2, 0, 1).unsqueeze(0) / 255.  # [1,3,H,W]
     dewarped = F.grid_sample(img_ori_t.to(device), pred_flow.permute(0, 2, 3, 1),
                              mode='bilinear', align_corners=True)
@@ -147,6 +154,8 @@ def infer(image_path, output_path, settings):
     out_np = (dewarped[0].permute(1, 2, 0).cpu().numpy() * 255).clip(0, 255).astype(np.uint8)
     cv2.imwrite(output_path, out_np[:, :, ::-1])  # RGB→BGR for cv2
     print(f"Saved dewarped image to: {output_path}")
+    if control_points_path:
+        print(f"Saved TPS control points to: {control_points_path}")
 
 
 if __name__ == "__main__":

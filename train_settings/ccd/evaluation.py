@@ -1,3 +1,4 @@
+import json
 import os
 
 import cv2
@@ -12,8 +13,38 @@ from utils_flow.visualization_utils import visualize_dewarping
 from .improved_diffusion.gaussian_diffusion import GaussianDiffusion
 import torch
 from torchvision.utils import save_image as tv_save_image
-from .improved_diffusion.gaussian_diffusion import grid2flow
+from .improved_diffusion.gaussian_diffusion import grid2flow, tps_motion_to_source_mesh
 import config.settings
+
+
+def save_tps_control_points(tps_motion, norm_target_mesh, output_size, output_path):
+    """Export first-stage TPS control points in the GUI-compatible JSON format."""
+    height, width = output_size
+    source_mesh = tps_motion_to_source_mesh(tps_motion, output_size, norm_target_mesh)
+
+    target_mesh = norm_target_mesh.clone()
+    if target_mesh.shape[0] != tps_motion.shape[0]:
+        target_mesh = target_mesh.repeat(tps_motion.shape[0], 1, 1, 1)
+    target_mesh[..., 0] = (target_mesh[..., 0] + 1) / 2 * (width - 1)
+    target_mesh[..., 1] = (target_mesh[..., 1] + 1) / 2 * (height - 1)
+
+    grid_height, grid_width = source_mesh.shape[1:3]
+    source_points = source_mesh[0].detach().cpu().reshape(-1, 2).tolist()
+    target_points = target_mesh[0].detach().cpu().reshape(-1, 2).tolist()
+    data = {
+        "source_points": [{"x": float(x), "y": float(y)} for x, y in source_points],
+        "target_points": [{"x": float(x), "y": float(y)} for x, y in target_points],
+        "grid_h": grid_height - 1,
+        "grid_w": grid_width - 1,
+        "image_height": height,
+        "image_width": width,
+        "coordinate_system": "pixel",
+        "stage": "tps_8x8",
+    }
+
+    os.makedirs(os.path.dirname(os.path.abspath(output_path)), exist_ok=True)
+    with open(output_path, "w", encoding="utf-8") as file:
+        json.dump(data, file, indent=2)
 
 
 def prepare_eval_data(settings, batch_preprocessing, SIZE, data):
@@ -242,6 +273,16 @@ def run_evaluation_docunet(
                  [1, 2, settings.model.grid_resolution[0], settings.model.grid_resolution[1]])]
         pred_grid_flow, source_mesh = grid2flow(sample[-1], [H_ori, W_ori],
                                                 norm_target=norm_target_mesh[-1])  # tps flow [1,2,H_ori, W_ori], [-1,1]
+
+        if settings.eval.save_tps_control_points:
+            control_points_dir = os.path.join(
+                "sampling", settings.eval.dataset_name, settings.eval.experiment_name, "pred_control_points"
+            )
+            sample_name = os.path.splitext(os.path.basename(str(data_name)))[0]
+            save_tps_control_points(
+                sample[0], norm_target_mesh[0], [H_ori, W_ori],
+                os.path.join(control_points_dir, f"{sample_name}.json"),
+            )
 
         if settings.train.visualize:
             visualize_dewarping(settings, pred_grid_flow, data, i, image_ori, data_name, ref_flow)

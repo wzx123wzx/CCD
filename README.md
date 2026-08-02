@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Cascaded Coordinate Diffusion: Extending the Generative Paradigm for Document Dewarping
 
 Document image geometric correction via a cascade diffusion-based geometric transformation field predictor.
@@ -18,14 +17,6 @@ conda activate CCD
 pip install torch==2.8.0+cu128 torchvision==0.23.0 --index-url https://download.pytorch.org/whl/cu128
 pip install -r requirements.txt
 ```
-
-The training and inference entry points require a CUDA-enabled GPU. Verify the installation with:
-
-```bash
-python -c "import torch, torchvision; print(torch.__version__, torchvision.__version__, torch.version.cuda, torch.cuda.is_available())"
-```
-
-If your environment reports an invalid `OMP_NUM_THREADS` value, set it to a positive integer before launching the code, for example `export OMP_NUM_THREADS=1`.
 
 OCR metrics additionally require Tesseract OCR, `pytesseract`, `python-Levenshtein`, and `jiwer`. Visual benchmark metrics additionally require MATLAB and the MATLAB Engine for Python.
 
@@ -75,7 +66,7 @@ dataset/DocUNet/
 └── scan/     # flat GT scans
 ```
 
-### DIR300
+### DIR300 Benchmark
 
 ```
 dataset/DIR300/
@@ -162,6 +153,57 @@ The output is saved at the original input resolution.
 
 ---
 
+## TPS-based Interactive Refinement
+
+To facilitate practical deployment, CCD provides an intuitive human-in-the-loop interface for interactive refinement. Leveraging the TPS parameterization, the interface is initialized with the model-predicted source control points, providing an accurate starting point for manual adjustment. Users can refine local geometry by directly dragging sparse control points.
+
+The interface supports two adjustment modes:
+
+- **Forward Mode:** The estimated source mesh on the distorted image is fixed. Users directly adjust target control points overlaid on the preliminary warped result to locally stretch or compress the image and eliminate residual distortions.
+- **Backward Mode:** The target mesh in the flattened coordinate space is fixed as a rigid, uniform grid. Users directly adjust source control points on the distorted input image to align them with the physical document geometry.
+
+### Usage
+
+1. Enable control-point export in `config/settings.py`:
+
+   ```python
+   class eval:
+       save_tps_control_points = True
+   ```
+
+2. Run `infer.py` as above. In addition to the dewarped image, it saves `<output_name>_control_points.json` next to the output image. During benchmark evaluation, JSON files are saved to `sampling/<dataset_name>/<experiment_name>/pred_control_points/`.
+
+3. Install the GUI dependency and launch the tool:
+
+   ```bash
+   pip install PyQt5
+   cd TPS-Visulization
+   python ForwardBackwardWarp_paperdemo.py
+   ```
+
+4. In the GUI, load the original distorted image and click **Load** to select the exported JSON file. Choose **Forward** or **Backward** mode according to the desired adjustment paradigm, drag the relevant control points to refine the dewarping result, then click **Save Warped Image**.
+
+Control-point export is disabled by default (`eval.save_tps_control_points = False`).
+
+The demonstrations below use [the input image](TPS-Visulization/32_4.png) and its [exported TPS control points](TPS-Visulization/32_4.json).
+
+<table>
+  <tr>
+    <td align="center"><b>Forward Warp</b></td>
+  </tr>
+  <tr>
+    <td><video src="TPS-Visulization/forward_demo.mp4" controls muted></video></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Backward Warp</b></td>
+  </tr>
+  <tr>
+    <td><video src="TPS-Visulization/backward_demo.mp4" controls muted></video></td>
+  </tr>
+</table>
+
+---
+
 ## Acknowledgements
 
 We sincerely thank the following projects, since our code is largely based on or inspired by
@@ -171,6 +213,4 @@ We sincerely thank the following projects, since our code is largely based on or
 [UVDoc](https://github.com/tanguymagne/UVDoc),
 [DewarpNet](https://github.com/cvlab-stonybrook/DewarpNet), and
 [DocScanner](https://github.com/fh2019ustc/DocScanner).
-=======
-# DocDiffuser
->>>>>>> ea0aabbcb70c3ef8d3442e9d3793e12c382b3ce1
+

@@ -56,6 +56,7 @@ class eval:
     elif dataset_name == 'dir300':
         eval_dataset_path = '/root/autodl-tmp/dataset/DIR300/dist'
     experiment_name = "test"
+    save_tps_control_points = False  # Export first-stage TPS control points for interactive visualization.
 
 
 class model:

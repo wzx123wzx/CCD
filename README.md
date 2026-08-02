@@ -208,7 +208,7 @@ The demonstrations below use [the input image](TPS-Visulization/32_4.png) and it
 
 We sincerely thank the following projects, since our code is largely based on or inspired by
 [improved-diffusion](https://github.com/openai/improved-diffusion),
-[DiT](https://github.com/facebookresearch/DiT), and
+[DiT](https://github.com/facebookresearch/DiT),
 [DvD](https://github.com/hanquansanren/DvD),
 [UVDoc](https://github.com/tanguymagne/UVDoc),
 [DewarpNet](https://github.com/cvlab-stonybrook/DewarpNet), and

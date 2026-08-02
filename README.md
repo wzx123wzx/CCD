@@ -187,20 +187,10 @@ Control-point export is disabled by default (`eval.save_tps_control_points = Fal
 
 The demonstrations below use [the input image](TPS-Visulization/32_4.png) and its [exported TPS control points](TPS-Visulization/32_4.json).
 
-<table>
-  <tr>
-    <td align="center"><b>Forward Warp</b></td>
-  </tr>
-  <tr>
-    <td><video src="TPS-Visulization/forward_demo.mp4" controls muted></video></td>
-  </tr>
-  <tr>
-    <td align="center"><b>Backward Warp</b></td>
-  </tr>
-  <tr>
-    <td><video src="TPS-Visulization/backward_demo.mp4" controls muted></video></td>
-  </tr>
-</table>
+<div align="center">
+  <video src="https://github.com/user-attachments/assets/74874abe-0795-4720-b9b2-431d43b2b1ca" width="70%" poster=""> </video>
+</div>
+
 
 ---
 
